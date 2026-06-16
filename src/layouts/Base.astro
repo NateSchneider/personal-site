@@ -1,0 +1,80 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Nate Schneider — Engineer, builder, and technical leader.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Outfit:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="page">
+      <header>
+        <a href="/" class="site-name">nate schneider</a>
+        <nav>
+          <a href="/guides">Guides</a>
+          <a href="https://vnextlabs.dev">vNext Labs</a>
+        </nav>
+      </header>
+      <main>
+        <slot />
+      </main>
+      <footer>
+        <p>&copy; {new Date().getFullYear()} Nate Schneider</p>
+        <span class="footer-dot">⏺</span>
+        <div class="theme-switcher">
+          <a href="#" data-theme-choice="auto" class="theme-option active">auto</a>
+          <span class="pipe">|</span>
+          <a href="#" data-theme-choice="dark" class="theme-option">dark</a>
+          <span class="pipe">|</span>
+          <a href="#" data-theme-choice="light" class="theme-option">light</a>
+        </div>
+      </footer>
+    </div>
+    <script is:inline>
+      (function () {
+        var stored = localStorage.getItem('theme') || 'auto';
+        apply(stored);
+
+        document.querySelectorAll('.theme-option').forEach(function (el) {
+          el.addEventListener('click', function (e) {
+            e.preventDefault();
+            var choice = this.getAttribute('data-theme-choice');
+            apply(choice);
+            localStorage.setItem('theme', choice);
+          });
+        });
+
+        function apply(choice) {
+          if (choice === 'auto') {
+            document.documentElement.removeAttribute('data-theme');
+          } else {
+            document.documentElement.setAttribute('data-theme', choice);
+          }
+          document.querySelectorAll('.theme-option').forEach(function (el) {
+            el.classList.toggle('active', el.getAttribute('data-theme-choice') === choice);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
